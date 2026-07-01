@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Meu Site XP</title>
+<style>
+  @font-face {
+    font-family: 'Tahoma Fallback';
+    src: local('Tahoma'), local('Verdana');
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Tahoma Fallback', Tahoma, Verdana, Geneva, sans-serif;
+    font-size: 11px;
+    overflow: hidden;
+  }
+
+  /* ---------- DESKTOP ---------- */
+  #desktop {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, #3a6ea5 0%, #6faedb 25%, #8ecae8 45%, #a8d8a0 60%, #5a9c4a 78%, #3d7a34 100%);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 50% 105%, #6fb84f 0%, #3d7a34 55%, transparent 70%),
+      linear-gradient(to bottom, #2a5d9f 0%, #6faedb 30%, #bfe3f2 55%);
+    background-blend-mode: normal;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .desktop-icon {
+    position: absolute;
+    width: 75px;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .desktop-icon .icon-glyph {
+    width: 40px; height: 40px;
+    margin: 0 auto 4px;
+    background: linear-gradient(180deg,#fff 0%,#dfe9f5 100%);
+    border: 1px solid #4a7fbf;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.4);
+  }
+  .desktop-icon span { font-size: 11px; }
+  .desktop-icon:focus, .desktop-icon.selected .icon-glyph {
+    outline: 1px dotted #fff;
+    background: rgba(49,106,197,.4);
+  }
+
+  /* ---------- WINDOW ---------- */
+  .xp-window {
+    position: absolute;
+    min-width: 320px;
+    background: #ece9d8;
+    border: 1px solid #0831d9;
+    border-radius: 8px 8px 3px 3px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,.5);
+    overflow: hidden;
+  }
+  .xp-titlebar {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 3px 3px 3px 6px;
+    background: linear-gradient(180deg, #2e6cd6 0%, #4e97ec 8%, #3a7dea 40%, #2058d6 92%, #163f9e 100%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: grab;
+    gap: 6px;
+  }
+  .xp-titlebar img.tb-icon { width:16px; height:16px; }
+  .xp-titlebar .tb-text { flex: 1; text-shadow: 1px 1px 1px rgba(0,0,0,.4); }
+  .tb-btn {
+    width: 21px; height: 20px;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 3px;
+    background: linear-gradient(180deg,#5b9df0,#2f6fd6);
+    color: #fff; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .tb-btn.close { background: linear-gradient(180deg,#f2897a,#d5352a); }
+  .tb-btn:hover { filter: brightness(1.15); }
+
+  .xp-menubar {
+    background: #ece9d8;
+    border-bottom: 1px solid #b5b0a1;
+    padding: 3px 6px;
+    display: flex;
+    gap: 14px;
+    font-size: 11px;
+  }
+  .xp-menubar span { cursor: default; }
+  .xp-menubar span:hover { background: #316ac5; color: #fff; padding: 0 2px; }
+
+  .xp-toolbar {
+    background: linear-gradient(180deg,#f4f2ea,#e3e0d3);
+    border-bottom: 1px solid #b5b0a1;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .xp-toolbar .addr-box {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #7f9db9;
+    border-radius: 2px;
+    padding: 2px 6px;
+    color: #333;
+  }
+
+  .xp-content {
+    background: #fff;
+    padding: 16px 20px;
+    height: 260px;
+    overflow: auto;
+    color: #000;
+    line-height: 1.5;
+  }
+  .xp-content h1 {
+    font-size: 20px;
+    color: #0a3d91;
+    border-bottom: 2px solid #a9c6f0;
+    padding-bottom: 6px;
+    margin-top: 0;
+  }
+  .xp-content a { color: #0645AD; }
+
+  .xp-statusbar {
+    background: #ece9d8;
+    border-top: 1px solid #fff;
+    box-shadow: 0 -1px 0 #b5b0a1;
+    padding: 3px 8px;
+    font-size: 10px;
+    color: #333;
+  }
+
+  /* generic XP button, used inside content for demo */
+  .xp-button {
+    font-family: inherit;
+    background: linear-gradient(180deg,#fefefe,#ece9d8 45%,#d9d5c3);
+    border: 1px solid #9b9b8e;
+    border-radius: 3px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .xp-button:active { background: #d9d5c3; }
+
+  /* ---------- TASKBAR ---------- */
+  #taskbar {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 32px;
+    background: linear-gradient(180deg, #2c5cc9 0%, #3f7de0 4%, #2358c9 50%, #1a4bb8 60%, #0f3aa0 100%);
+    border-top: 1px solid #6a9ef0;
+    display: flex;
+    align-items: center;
+    z-index: 500;
+  }
+  #start-btn {
+    height: 30px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 14px 0 8px;
+    background: linear-gradient(180deg,#6fce4e,#3a9c1f 45%,#2c8a12);
+    border-radius: 0 10px 10px 0;
+    border: 1px solid #1f6e0c;
+    color: #fff;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  #start-btn .flag {
+    width: 18px; height: 18px;
+    background: conic-gradient(from 0deg,#f25022 0 90deg,#7fba00 90deg 180deg,#00a4ef 180deg 270deg,#ffb900 270deg 360deg);
+    border-radius: 2px;
+  }
+  #taskbar-tasks {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    padding: 0 8px;
+    height: 26px;
+    align-items: center;
+  }
+  .task-btn {
+    background: linear-gradient(180deg,#3f7de0,#1c4fbd);
+    border: 1px solid #12327d;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 10px;
+    max-width: 160px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    cursor: pointer;
+  }
+  .task-btn.active {
+    background: linear-gradient(180deg,#1c4fbd,#0f3aa0);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.5);
+  }
+  #tray {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px;
+    height: 30px;
+    background: linear-gradient(180deg,#1a4bb8,#0f3aa0);
+    border-left: 1px solid #274f9e;
+    color: #fff;
+    font-size: 11px;
+  }
+
+  /* ---------- START MENU ---------- */
+  #start-menu {
+    position: absolute;
+    bottom: 32px;
+    left: 0;
+    width: 330px;
+    background: #ece9d8;
+    border: 1px solid #0831d9;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 3px 0 12px rgba(0,0,0,.5);
+    display: none;
+    overflow: hidden;
+    z-index: 600;
+  }
+  #start-menu.open { display: block; }
+  .sm-header {
+    background: linear-gradient(180deg,#3a7dea,#1c4fbd);
+    color: #fff;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    font-weight: bold; font-size: 14px;
+  }
+  .sm-header .avatar {
+    width: 34px; height: 34px;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 4px;
+  }
+  .sm-body { display: flex; min-height: 260px; }
+  .sm-left { flex: 1; background: #fff; padding: 8px 0; }
+  .sm-right { width: 130px; background: linear-gradient(180deg,#d3dced,#b9c9ea); padding: 8px 0; }
+  .sm-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .sm-item:hover { background: #316ac5; color: #fff; }
+  .sm-item .sm-ico {
+    width: 22px; height: 22px;
+    background: linear-gradient(180deg,#fff,#cfe0f5);
+    border: 1px solid #7f9db9;
+    border-radius: 3px;
+  }
+  .sm-divider { border-top: 1px solid #a9c6f0; margin: 4px 0; }
+  #start-menu .sm-footer {
+    background: linear-gradient(180deg,#3a7dea,#1c4fbd);
+    padding: 5px 10px;
+    display: flex; justify-content: flex-end;
+  }
+  .sm-footer .xp-button { font-size: 10px; padding: 3px 10px; }
+</style>
+</head>
+<body>
+
+<div id="desktop">
+
+  <div class="desktop-icon" style="top:16px; left:16px;" ondblclick="openWindow()">
+    <div class="icon-glyph"></div>
+    <span>Meu Computador</span>
+  </div>
+  <div class="desktop-icon" style="top:100px; left:16px;" ondblclick="openWindow()">
+    <div class="icon-glyph"></div>
+    <span>Lixeira</span>
+  </div>
+  <div class="desktop-icon" style="top:184px; left:16px;" ondblclick="openWindow()">
+    <div class="icon-glyph"></div>
+    <span>Meu Site.html</span>
+  </div>
+
+  <!-- ===== JANELA ===== -->
+  <div class="xp-window" id="win1" style="top:60px; left:120px; width:560px;">
+    <div class="xp-titlebar" id="drag-handle">
+      <div style="width:16px;height:16px;background:#fff;border-radius:2px;"></div>
+      <div class="tb-text">Meu Site - Windows Internet Explorer</div>
+      <div class="tb-btn">_</div>
+      <div class="tb-btn">▢</div>
+      <div class="tb-btn close">×</div>
+    </div>
+    <div class="xp-menubar">
+      <span>Arquivo</span><span>Editar</span><span>Exibir</span><span>Favoritos</span><span>Ferramentas</span><span>Ajuda</span>
+    </div>
+    <div class="xp-toolbar">
+      <div class="xp-button">◀ Voltar</div>
+      <div class="addr-box">http://www.meusite.com.br/inicio.htm</div>
+      <div class="xp-button">Ir</div>
+    </div>
+    <div class="xp-content">
+      <h1>Bem-vindo ao meu site!</h1>
+      <p>Este layout imita o Windows XP: janela com barra de título em gradiente azul,
+      barra de menu, barra de endereço, botões 3D e a fonte Tahoma.</p>
+      <p>Você pode arrastar esta janela pelo título, clicar em Iniciar, ou abrir mais
+      "janelas" clicando duas vezes nos ícones da área de trabalho.</p>
+      <button class="xp-button" onclick="alert('Clique registrado! (estilo caixa de mensagem do XP)')">Clique aqui</button>
+    </div>
+    <div class="xp-statusbar">Concluído</div>
+  </div>
+
+</div>
+
+<div id="taskbar">
+  <div id="start-btn" onclick="toggleStart()">
+    <div class="flag"></div> start
+  </div>
+  <div id="taskbar-tasks">
+    <div class="task-btn active">Meu Site - Windows Internet Explorer</div>
+  </div>
+  <div id="tray">
+    <span id="clock">00:00</span>
+  </div>
+</div>
+
+<div id="start-menu">
+  <div class="sm-header">
+    <div class="avatar"></div>
+    Usuário
+  </div>
+  <div class="sm-body">
+    <div class="sm-left">
+      <div class="sm-item"><div class="sm-ico"></div>Internet Explorer</div>
+      <div class="sm-item"><div class="sm-ico"></div>Outlook Express</div>
+      <div class="sm-item"><div class="sm-ico"></div>Bloco de Notas</div>
+      <div class="sm-item"><div class="sm-ico"></div>Paint</div>
+      <div class="sm-divider"></div>
+      <div class="sm-item"><div class="sm-ico"></div>Todos os programas ▶</div>
+    </div>
+    <div class="sm-right">
+      <div class="sm-item">Meus Documentos</div>
+      <div class="sm-item">Meus Locais de Rede</div>
+      <div class="sm-item">Painel de Controle</div>
+      <div class="sm-divider"></div>
+      <div class="sm-item">Ajuda e Suporte</div>
+      <div class="sm-item">Executar...</div>
+    </div>
+  </div>
+  <div class="sm-footer">
+    <div class="xp-button">Fazer logoff</div>
+    <div class="xp-button">Desligar</div>
+  </div>
+</div>
+
+<script>
+  // relógio
+  function tick() {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent = h + ':' + m;
+  }
+  tick(); setInterval(tick, 1000*30);
+
+  // start menu
+  function toggleStart() {
+    document.getElementById('start-menu').classList.toggle('open');
+  }
+  document.getElementById('desktop').addEventListener('click', (e)=>{
+    if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
+      document.getElementById('start-menu').classList.remove('open');
+    }
+  });
+
+  // arrastar janela
+  const win = document.getElementById('win1');
+  const handle = document.getElementById('drag-handle');
+  let dragging = false, offX = 0, offY = 0;
+  handle.addEventListener('mousedown', (e)=>{
+    dragging = true;
+    offX = e.clientX - win.offsetLeft;
+    offY = e.clientY - win.offsetTop;
+    win.style.zIndex = 100;
+  });
+  document.addEventListener('mousemove', (e)=>{
+    if(!dragging) return;
+    win.style.left = (e.clientX - offX) + 'px';
+    win.style.top = Math.max(0, e.clientY - offY) + 'px';
+  });
+  document.addEventListener('mouseup', ()=> dragging = false);
+
+  function openWindow(){ win.style.display='block'; win.style.zIndex=100; }
+</script>
+
+</body>
+</html>
